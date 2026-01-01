@@ -59,44 +59,11 @@
         <h2>المحول السوري الذكي</h2>
         <div id="container" style="display: flex; flex-direction: column;">
             <div id="newSection" class="box">
-                <img src="new_money.jpg" id="imgNew" onclick="openMenu('new')">
+                <img src="100.jpg" id="imgNew" onclick="openMenu('new')">
                 <small>الفئة الجديدة</small>
                 <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
             </div>
             <center id="btnCenter"><button class="swap-btn" onclick="doSwap()">⇅</button></center>
             <div id="oldSection" class="box">
-                <img src="old_money.jpg" id="imgOld" onclick="openMenu('old')">
-                <small>الفئة القديمة</small>
-                <input type="number" id="inOld" placeholder="0" oninput="doCalc('old')">
-            </div>
-        </div>
-        <div class="footer">
-            <p>تطوير: Bassam Zain AL-Abidin</p>
-            <div style="display:flex; justify-content:center; gap:20px;">
-                <a href="https://www.facebook.com/share/16zQQ2YcFP/"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="35"></a>
-                <a href="https://www.instagram.com/nb_x.6?igsh=NDNua2VzazhubDdi"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="35"></a>
-            </div>
-        </div>
-    </div>
-
-    <div id="popMenu" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 id="menuTitle"></h3><div id="menuButtons" class="grid-menu"></div><button class="close-btn">إلغاء</button></div></div>
-
-    <script>
-        /* كود الحماية والوظائف */
-        (function(_0x1234){
-            setTimeout(function(){ document.getElementById('splash').style.display = 'none'; }, 3000);
-            window.showAbout = function() { document.getElementById('aboutModal').style.display = 'flex'; };
-            window.closeAbout = function() { document.getElementById('aboutModal').style.display = 'none'; };
-            window.checkExit = function() { if(confirm("هل تريد الخروج من المحول السوري الذكي..؟")) window.close(); };
-            const _R = 100;
-            window.toggleMenu = function() { var m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'block') ? 'none' : 'block'; };
-            window.shareApp = function() { if (navigator.share) { navigator.share({ title: 'المحول السوري الذكي', text: 'جرب تطبيق بسام للتحويل', url: window.location.href }); } };
-            window.doCalc = function(w) { var n = document.getElementById('inNew'), o = document.getElementById('inOld'); if (w === 'new') o.value = n.value ? n.value * _R : ""; else n.value = o.value ? o.value / _R : ""; updateImg(n.value, o.value); };
-            window.updateImg = function(nv, ov) { var iN = document.getElementById('imgNew'), iO = document.getElementById('imgOld'), nV = parseInt(nv), oV = parseInt(ov); iN.src = [10, 25, 50, 100, 200].includes(nV) ? nV + ".jpg" : (nV === 500 ? "500_new.jpg" : "new_money.jpg"); iO.src = [500, 1000, 2000, 5000].includes(oV) ? oV + ".jpg" : "old_money.jpg"; };
-            window.doSwap = function() { var p = document.getElementById('container'), n = document.getElementById('newSection'), o = document.getElementById('oldSection'), b = document.getElementById('btnCenter'); if (p.firstElementChild === n) { p.appendChild(b); p.appendChild(n); } else { p.appendChild(b); p.appendChild(o); } };
-            window.openMenu = function(t) { var m = document.getElementById('popMenu'), c = document.getElementById('menuButtons'); document.getElementById('menuTitle').innerText = t === 'new' ? 'فئات العملة الجديدة' : 'فئات العملة القديمة'; c.innerHTML = ""; var v = (t === 'new') ? [10, 25, 50, 100, 200, 500] : [500, 1000, 2000, 5000]; v.forEach(function(x) { var btn = document.createElement('button'); btn.innerText = x; btn.onclick = function() { document.getElementById(t==='new'?'inNew':'inOld').value = x; doCalc(t); m.style.display='none'; }; c.appendChild(btn); }); m.style.display = 'flex'; };
-            window.onclick = function(e) { if (!e.target.matches('.menu-icon')) document.getElementById('dropdownMenu').style.display = 'none'; };
-        })();
-    </script>
-</body>
-</html>
+                <img src="5000
+                    
