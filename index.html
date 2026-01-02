@@ -2,107 +2,47 @@
 <html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المحول السوري الذكي</title>
+    <title>اختبار الصور</title>
     <style>
-        :root { --green: #1b5e20; --light: #f1f8e9; }
-        body { font-family: sans-serif; background: #e0e0e0; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
-        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2s; }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-        .menu-container { position: absolute; top: 15px; left: 15px; z-index: 1000; }
-        .menu-icon { font-size: 28px; cursor: pointer; color: var(--green); background: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .menu-dropdown { display: none; position: absolute; top: 45px; left: 0; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 180px; overflow: hidden; }
-        .menu-dropdown div { padding: 12px; font-size: 14px; border-bottom: 1px solid #eee; text-align: right; cursor: pointer; color: #333; }
-        .app-card { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; margin-top: 45px; }
-        .box { background: var(--light); border: 2px solid #c8e6c9; border-radius: 15px; padding: 15px; margin: 10px 0; }
-        .box img { width: 100%; height: 110px; object-fit: contain; border-radius: 10px; background: #fff; border: 1px solid #ddd; }
-        input { width: 100%; font-size: 30px; font-weight: bold; border: none; background: transparent; text-align: center; color: var(--green); outline: none; }
-        .swap-btn { background: var(--green); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; margin: 10px 0; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
-        .close-btn { background: var(--green); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; }
-        .footer { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
+        body { text-align: center; font-family: sans-serif; background: #eee; }
+        .test-box { background: white; margin: 20px; padding: 20px; border-radius: 15px; }
+        img { width: 250px; height: 120px; object-fit: contain; background: #ddd; border: 2px solid #1b5e20; }
+        .social-links img { width: 40px; height: 40px; border: none; background: none; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <h1 style="color: var(--green);">المحول السوري الذكي</h1>
-        <p>بسام زين العابدين...</p>
+    <h1>فحص عمل الصور والروابط</h1>
+
+    <div class="test-box">
+        <h3>1. شعار التطبيق (logo.jpg)</h3>
+        <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/150?text=Logo+Missing'">
     </div>
 
-    <div id="aboutModal" class="modal">
-        <div class="modal-content">
-            <h3 style="color: var(--green);">حول التطبيق</h3>
-            <p>المحول السوري الذكي<br><b>برمجة: بسام زين العابدين</b><br>رقمي: 0998535610</p>
-            <button class="close-btn" onclick="document.getElementById('aboutModal').style.display='none'">موافق</button>
+    <div class="test-box">
+        <h3>2. فئة 100 ليرة (100.jpg)</h3>
+        <img src="100.jpg" onerror="this.src='https://via.placeholder.com/150?text=100+Missing'">
+    </div>
+
+    <div class="test-box">
+        <h3>3. فئة 5000 ليرة (5000.jpg)</h3>
+        <img src="5000.jpg" onerror="this.src='https://via.placeholder.com/150?text=5000+Missing'">
+    </div>
+
+    <div class="test-box">
+        <h3>4. فئة 500 الجديدة (500_new.jpg)</h3>
+        <img src="500_new.jpg" onerror="this.src='https://via.placeholder.com/150?text=500+New+Missing'">
+    </div>
+
+    <div class="test-box">
+        <h3>5. روابط السوشيال ميديا</h3>
+        <div class="social-links">
+            <a href="https://www.facebook.com/share/16zQQ2YcFP/">فيسبوك بسام</a> | 
+            <a href="https://www.instagram.com/nb_x.6?igsh=NDNua2VzazhubDdi">إنستغرام بسام</a>
         </div>
     </div>
 
-    <div class="menu-container">
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div id="dropdownMenu" class="menu-dropdown">
-            <div onclick="window.open('https://wa.me/963998535610')">📞 مراسلة الدعم</div>
-            <div onclick="shareApp()">📤 مشاركة التطبيق</div>
-            <div onclick="document.getElementById('aboutModal').style.display='flex'">ℹ️ حول التطبيق</div>
-        </div>
-    </div>
+    <button onclick="alert('زر المشاركة سيعود هنا')">اختبار الكبسات</button>
 
-    <div class="app-card">
-        <img src="logo.jpg?v=1" style="width:70px; border-radius:50%">
-        <h2>المحول السوري الذكي</h2>
-        <div id="container">
-            <div class="box">
-                <img src="100.jpg?v=1" id="imgNew">
-                <small>الفئة الجديدة</small>
-                <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
-            </div>
-            <button class="swap-btn" onclick="doSwap()">⇅</button>
-            <div class="box">
-                <img src="5000.jpg?v=1" id="imgOld">
-                <small>الفئة القديمة</small>
-                <input type="number" id="inOld" placeholder="0" oninput="doCalc('old')">
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>تطوير: Bassam Zain AL-Abidin</p>
-            <div style="display:flex; justify-content:center; gap:20px;">
-                <a href="https://www.facebook.com/share/16zQQ2YcFP/"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="35"></a>
-                <a href="https://www.instagram.com/nb_x.6?igsh=NDNua2VzazhubDdi"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="35"></a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function toggleMenu() { 
-            var m = document.getElementById('dropdownMenu'); 
-            m.style.display = (m.style.display === 'block') ? 'none' : 'block'; 
-        }
-
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({ title: 'المحول السوري الذكي', text: 'تطبيق تحويل العملة السورية - بسام', url: window.location.href });
-            }
-        }
-
-        function doCalc(type) {
-            let n = document.getElementById('inNew'), o = document.getElementById('inOld');
-            if (type === 'new') o.value = n.value ? n.value * 100 : "";
-            else n.value = o.value ? o.value / 100 : "";
-            
-            // تحديث الصور مع إضافة ميزة منع التخزين المؤقت (Cache Buster)
-            let v = "?v=" + new Date().getTime();
-            document.getElementById('imgNew').src = (n.value == 500) ? "500_new.jpg" + v : (n.value ? n.value + ".jpg" + v : "100.jpg" + v);
-            document.getElementById('imgOld').src = (o.value) ? o.value + ".jpg" + v : "5000.jpg" + v;
-        }
-
-        function doSwap() {
-            let c = document.getElementById('container');
-            c.append(c.firstElementChild);
-        }
-        
-        window.onclick = function(e) { if (!e.target.matches('.menu-icon')) document.getElementById('dropdownMenu').style.display = 'none'; };
-    </script>
 </body>
 </html>
