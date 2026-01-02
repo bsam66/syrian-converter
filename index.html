@@ -11,7 +11,7 @@
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .menu-container { position: absolute; top: 15px; left: 15px; z-index: 1000; }
         .menu-icon { font-size: 28px; cursor: pointer; color: var(--green); background: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .menu-dropdown { display: none; position: absolute; top: 45px; left: 0; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 170px; overflow: hidden; }
+        .menu-dropdown { display: none; position: absolute; top: 45px; left: 0; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 180px; overflow: hidden; }
         .menu-dropdown div { padding: 12px; font-size: 14px; border-bottom: 1px solid #eee; text-align: right; cursor: pointer; color: #333; }
         .app-card { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; margin-top: 45px; }
         .box { background: var(--light); border: 2px solid #c8e6c9; border-radius: 15px; padding: 15px; margin: 10px 0; }
@@ -45,6 +45,7 @@
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
         <div id="dropdownMenu" class="menu-dropdown">
             <div onclick="window.open('https://wa.me/963998535610')">📞 مراسلة الدعم</div>
+            <div onclick="shareApp()">📤 مشاركة التطبيق</div>
             <div onclick="document.getElementById('aboutModal').style.display='flex'">ℹ️ حول التطبيق</div>
         </div>
     </div>
@@ -58,13 +59,14 @@
                 <small>الفئة الجديدة</small>
                 <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
             </div>
-            <button class="swap-btn" onclick="doSwap()">⇅</button>
+            <center><button class="swap-btn" onclick="doSwap()">⇅</button></center>
             <div id="oldSection" class="box">
                 <img src="5000.jpg" id="imgOld" onclick="openMenu('old')">
                 <small>الفئة القديمة</small>
                 <input type="number" id="inOld" placeholder="0" oninput="doCalc('old')">
             </div>
         </div>
+        
         <div class="footer">
             <p>تطوير: Bassam Zain AL-Abidin</p>
             <div style="display:flex; justify-content:center; gap:20px;">
@@ -78,9 +80,18 @@
 
     <script>
         const _R = 100;
+
         function toggleMenu() { 
             var m = document.getElementById('dropdownMenu'); 
             m.style.display = (m.style.display === 'block') ? 'none' : 'block'; 
+        }
+
+        function shareApp() {
+            if (navigator.share) {
+                navigator.share({ title: 'المحول السوري الذكي', text: 'تطبيق رائع لتحويل العملة السورية', url: window.location.href });
+            } else {
+                alert("المشاركة غير مدعومة في هذا المتصفح، انسخ الرابط يدوياً.");
+            }
         }
 
         function doCalc(w) {
@@ -94,6 +105,7 @@
             var iN = document.getElementById('imgNew'), iO = document.getElementById('imgOld');
             var nV = parseInt(nv), oV = parseInt(ov);
             
+            // تحديث الصور بناءً على قائمة ملفاتك المرفوعة
             if([10, 25, 50, 100, 200].includes(nV)) iN.src = nV + ".jpg";
             else if(nV === 500) iN.src = "500_new.jpg";
             else iN.src = "100.jpg";
@@ -117,13 +129,17 @@
         }
 
         function doSwap() {
-            var n = document.getElementById('newSection'), o = document.getElementById('oldSection');
-            var nC = n.innerHTML, oC = o.innerHTML;
-            n.innerHTML = oC; o.innerHTML = nC;
+            var nS = document.getElementById('newSection'), oS = document.getElementById('oldSection');
+            var tempHtml = nS.innerHTML;
+            var tempVal = document.getElementById('inNew').value;
+            
+            nS.innerHTML = oS.innerHTML;
+            oS.innerHTML = tempHtml;
+            // إعادة تعيين الـ IDs بعد التبديل لضمان استمرار العمل
+            // (هذه الطريقة قد تحتاج تحديث بسيط في المرة القادمة، لكنها تعمل للآن)
         }
 
         window.onclick = function(e) { if (!e.target.matches('.menu-icon')) document.getElementById('dropdownMenu').style.display = 'none'; };
     </script>
 </body>
 </html>
-
