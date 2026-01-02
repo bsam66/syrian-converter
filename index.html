@@ -6,31 +6,28 @@
     <title>المحول السوري الذكي</title>
     <style>
         :root { --green: #1b5e20; --light: #f1f8e9; }
-        body { font-family: sans-serif; background: #e0e0e0; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; min-height: 100vh; overflow-x: hidden; }
-        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2s; }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+        body { font-family: sans-serif; background: #e0e0e0; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .menu-container { position: absolute; top: 15px; left: 15px; z-index: 1000; }
         .menu-icon { font-size: 28px; cursor: pointer; color: var(--green); background: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .menu-dropdown { display: none; position: absolute; top: 45px; left: 0; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 180px; overflow: hidden; }
         .menu-dropdown div { padding: 12px; font-size: 14px; border-bottom: 1px solid #eee; text-align: right; cursor: pointer; color: #333; }
         .app-card { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; margin-top: 45px; }
         .box { background: var(--light); border: 2px solid #c8e6c9; border-radius: 15px; padding: 15px; margin: 10px 0; }
-        .box img { width: 100%; height: 110px; object-fit: contain; border-radius: 10px; cursor: pointer; background: #fff; }
+        .box img { width: 100%; height: 110px; object-fit: contain; border-radius: 10px; background: #fff; }
         input { width: 100%; font-size: 30px; font-weight: bold; border: none; background: transparent; text-align: center; color: var(--green); outline: none; }
-        .swap-btn { background: var(--green); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; margin: 5px 0; }
+        .swap-btn { background: var(--green); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; margin: 10px 0; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
         .close-btn { background: var(--green); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; }
-        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-menu button { padding: 15px; font-size: 18px; border-radius: 10px; border: 1px solid #ddd; background: var(--light); cursor: pointer; }
-        .footer { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; font-weight: bold; }
+        .footer { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="splash">
         <h1 style="color: var(--green);">المحول السوري الذكي</h1>
-        <p>جاري التحميل...</p>
+        <p>بسام زين العابدين...</p>
     </div>
 
     <div id="aboutModal" class="modal">
@@ -54,14 +51,14 @@
         <img src="logo.jpg" style="width:70px; border-radius:50%">
         <h2>المحول السوري الذكي</h2>
         <div id="container">
-            <div id="newSection" class="box">
-                <img src="100.jpg" id="imgNew" onclick="openMenu('new')">
+            <div class="box">
+                <img src="100.jpg" id="imgNew">
                 <small>الفئة الجديدة</small>
                 <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
             </div>
-            <center><button class="swap-btn" onclick="doSwap()">⇅</button></center>
-            <div id="oldSection" class="box">
-                <img src="5000.jpg" id="imgOld" onclick="openMenu('old')">
+            <button class="swap-btn" onclick="doSwap()">⇅</button>
+            <div class="box">
+                <img src="5000.jpg" id="imgOld">
                 <small>الفئة القديمة</small>
                 <input type="number" id="inOld" placeholder="0" oninput="doCalc('old')">
             </div>
@@ -76,11 +73,9 @@
         </div>
     </div>
 
-    <div id="popMenu" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 id="menuTitle"></h3><div id="menuButtons" class="grid-menu"></div><button class="close-btn">إلغاء</button></div></div>
-
     <script>
-        const _R = 100;
-
+        setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 2500);
+        
         function toggleMenu() { 
             var m = document.getElementById('dropdownMenu'); 
             m.style.display = (m.style.display === 'block') ? 'none' : 'block'; 
@@ -88,58 +83,25 @@
 
         function shareApp() {
             if (navigator.share) {
-                navigator.share({ title: 'المحول السوري الذكي', text: 'تطبيق رائع لتحويل العملة السورية', url: window.location.href });
-            } else {
-                alert("المشاركة غير مدعومة في هذا المتصفح، انسخ الرابط يدوياً.");
+                navigator.share({ title: 'المحول السوري الذكي', text: 'تطبيق تحويل العملة السورية - بسام', url: window.location.href });
             }
         }
 
-        function doCalc(w) {
-            var n = document.getElementById('inNew'), o = document.getElementById('inOld');
-            if (w === 'new') o.value = n.value ? n.value * _R : "";
-            else n.value = o.value ? o.value / _R : "";
-            updateImg(n.value, o.value);
-        }
-
-        function updateImg(nv, ov) {
-            var iN = document.getElementById('imgNew'), iO = document.getElementById('imgOld');
-            var nV = parseInt(nv), oV = parseInt(ov);
+        function doCalc(type) {
+            let n = document.getElementById('inNew'), o = document.getElementById('inOld');
+            if (type === 'new') o.value = n.value ? n.value * 100 : "";
+            else n.value = o.value ? o.value / 100 : "";
             
-            // تحديث الصور بناءً على قائمة ملفاتك المرفوعة
-            if([10, 25, 50, 100, 200].includes(nV)) iN.src = nV + ".jpg";
-            else if(nV === 500) iN.src = "500_new.jpg";
-            else iN.src = "100.jpg";
-
-            if([500, 1000, 2000, 5000].includes(oV)) iO.src = oV + ".jpg";
-            else iO.src = "5000.jpg";
-        }
-
-        function openMenu(t) {
-            var m = document.getElementById('popMenu'), c = document.getElementById('menuButtons');
-            document.getElementById('menuTitle').innerText = t === 'new' ? 'فئات جديدة' : 'فئات قديمة';
-            c.innerHTML = "";
-            var v = (t === 'new') ? [10, 25, 50, 100, 200, 500] : [500, 1000, 2000, 5000];
-            v.forEach(x => {
-                var btn = document.createElement('button');
-                btn.innerText = x;
-                btn.onclick = () => { document.getElementById(t==='new'?'inNew':'inOld').value = x; doCalc(t); m.style.display='none'; };
-                c.appendChild(btn);
-            });
-            m.style.display = 'flex';
+            // تحديث الصور
+            document.getElementById('imgNew').src = (n.value == 500) ? "500_new.jpg" : (n.value ? n.value + ".jpg" : "100.jpg");
+            document.getElementById('imgOld').src = o.value ? o.value + ".jpg" : "5000.jpg";
         }
 
         function doSwap() {
-            var nS = document.getElementById('newSection'), oS = document.getElementById('oldSection');
-            var tempHtml = nS.innerHTML;
-            var tempVal = document.getElementById('inNew').value;
-            
-            nS.innerHTML = oS.innerHTML;
-            oS.innerHTML = tempHtml;
-            // إعادة تعيين الـ IDs بعد التبديل لضمان استمرار العمل
-            // (هذه الطريقة قد تحتاج تحديث بسيط في المرة القادمة، لكنها تعمل للآن)
+            let c = document.getElementById('container');
+            c.append(c.firstElementChild);
         }
-
-        window.onclick = function(e) { if (!e.target.matches('.menu-icon')) document.getElementById('dropdownMenu').style.display = 'none'; };
     </script>
 </body>
 </html>
+
