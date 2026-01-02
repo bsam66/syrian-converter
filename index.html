@@ -7,7 +7,7 @@
     <style>
         :root { --green: #1b5e20; --light: #f1f8e9; }
         body { font-family: sans-serif; background: #e0e0e0; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; min-height: 100vh; overflow-x: hidden; }
-        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2.5s; }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeOut 0.5s forwards 2s; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         .menu-container { position: absolute; top: 15px; left: 15px; z-index: 1000; }
         .menu-icon { font-size: 28px; cursor: pointer; color: var(--green); background: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -26,7 +26,7 @@
         .footer { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; font-weight: bold; }
     </style>
 </head>
-<body ondblclick="checkExit()">
+<body>
 
     <div id="splash">
         <h1 style="color: var(--green);">المحول السوري الذكي</h1>
@@ -37,7 +37,7 @@
         <div class="modal-content">
             <h3 style="color: var(--green);">حول التطبيق</h3>
             <p>المحول السوري الذكي<br><b>برمجة: بسام زين العابدين</b><br>رقمي: 0998535610</p>
-            <button class="close-btn" onclick="closeAbout()">موافق</button>
+            <button class="close-btn" onclick="document.getElementById('aboutModal').style.display='none'">موافق</button>
         </div>
     </div>
 
@@ -45,21 +45,20 @@
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
         <div id="dropdownMenu" class="menu-dropdown">
             <div onclick="window.open('https://wa.me/963998535610')">📞 مراسلة الدعم</div>
-            <div onclick="shareApp()">📤 مشاركة التطبيق</div>
-            <div onclick="showAbout()">ℹ️ حول التطبيق</div>
+            <div onclick="document.getElementById('aboutModal').style.display='flex'">ℹ️ حول التطبيق</div>
         </div>
     </div>
 
     <div class="app-card">
         <img src="logo.jpg" style="width:70px; border-radius:50%">
         <h2>المحول السوري الذكي</h2>
-        <div id="container" style="display: flex; flex-direction: column;">
+        <div id="container">
             <div id="newSection" class="box">
                 <img src="100.jpg" id="imgNew" onclick="openMenu('new')">
                 <small>الفئة الجديدة</small>
                 <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
             </div>
-            <center id="btnCenter"><button class="swap-btn" onclick="doSwap()">⇅</button></center>
+            <button class="swap-btn" onclick="doSwap()">⇅</button>
             <div id="oldSection" class="box">
                 <img src="5000.jpg" id="imgOld" onclick="openMenu('old')">
                 <small>الفئة القديمة</small>
@@ -78,69 +77,52 @@
     <div id="popMenu" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 id="menuTitle"></h3><div id="menuButtons" class="grid-menu"></div><button class="close-btn">إلغاء</button></div></div>
 
     <script>
-        (function(){
-            setTimeout(function(){ document.getElementById('splash').style.display = 'none'; }, 3000);
-            window.showAbout = function() { document.getElementById('aboutModal').style.display = 'flex'; };
-            window.closeAbout = function() { document.getElementById('aboutModal').style.display = 'none'; };
-            window.checkExit = function() { if(confirm("هل تريد الخروج؟")) window.close(); };
-            const _R = 100;
+        const _R = 100;
+        function toggleMenu() { 
+            var m = document.getElementById('dropdownMenu'); 
+            m.style.display = (m.style.display === 'block') ? 'none' : 'block'; 
+        }
 
-            window.toggleMenu = function() { 
-                var m = document.getElementById('dropdownMenu'); 
-                m.style.display = (m.style.display === 'block') ? 'none' : 'block'; 
-            };
+        function doCalc(w) {
+            var n = document.getElementById('inNew'), o = document.getElementById('inOld');
+            if (w === 'new') o.value = n.value ? n.value * _R : "";
+            else n.value = o.value ? o.value / _R : "";
+            updateImg(n.value, o.value);
+        }
 
-            window.shareApp = function() { 
-                if (navigator.share) { 
-                    navigator.share({ title: 'المحول السوري الذكي', text: 'جرب تطبيق بسام للتحويل', url: window.location.href }); 
-                } 
-            };
+        function updateImg(nv, ov) {
+            var iN = document.getElementById('imgNew'), iO = document.getElementById('imgOld');
+            var nV = parseInt(nv), oV = parseInt(ov);
+            
+            if([10, 25, 50, 100, 200].includes(nV)) iN.src = nV + ".jpg";
+            else if(nV === 500) iN.src = "500_new.jpg";
+            else iN.src = "100.jpg";
 
-            window.doCalc = function(w) { 
-                var n = document.getElementById('inNew'), o = document.getElementById('inOld'); 
-                if (w === 'new') o.value = n.value ? n.value * _R : ""; 
-                else n.value = o.value ? o.value / _R : ""; 
-                updateImg(n.value, o.value); 
-            };
+            if([500, 1000, 2000, 5000].includes(oV)) iO.src = oV + ".jpg";
+            else iO.src = "5000.jpg";
+        }
 
-            window.updateImg = function(nv, ov) { 
-                var iN = document.getElementById('imgNew'), iO = document.getElementById('imgOld');
-                var nV = parseInt(nv), oV = parseInt(ov); 
-                
-                // تطبيق منطق الـ 500 الناجح على كل الفئات الجديدة
-                if([10, 25, 50, 100, 200].includes(nV)) iN.src = nV + ".jpg";
-                else if(nV === 500) iN.src = "500_new.jpg";
-                else iN.src = "100.jpg";
+        function openMenu(t) {
+            var m = document.getElementById('popMenu'), c = document.getElementById('menuButtons');
+            document.getElementById('menuTitle').innerText = t === 'new' ? 'فئات جديدة' : 'فئات قديمة';
+            c.innerHTML = "";
+            var v = (t === 'new') ? [10, 25, 50, 100, 200, 500] : [500, 1000, 2000, 5000];
+            v.forEach(x => {
+                var btn = document.createElement('button');
+                btn.innerText = x;
+                btn.onclick = () => { document.getElementById(t==='new'?'inNew':'inOld').value = x; doCalc(t); m.style.display='none'; };
+                c.appendChild(btn);
+            });
+            m.style.display = 'flex';
+        }
 
-                // تطبيق نفس المنطق على الفئات القديمة لضمان ظهور (500، 1000، 2000، 5000)
-                if([500, 1000, 2000, 5000].includes(oV)) iO.src = oV + ".jpg";
-                else iO.src = "5000.jpg";
-            };
+        function doSwap() {
+            var n = document.getElementById('newSection'), o = document.getElementById('oldSection');
+            var nC = n.innerHTML, oC = o.innerHTML;
+            n.innerHTML = oC; o.innerHTML = nC;
+        }
 
-            window.doSwap = function() { 
-                var p = document.getElementById('container'), n = document.getElementById('newSection'), o = document.getElementById('oldSection'), b = document.getElementById('btnCenter'); 
-                if (p.firstElementChild === n) { p.appendChild(b); p.appendChild(n); } 
-                else { p.appendChild(b); p.appendChild(o); } 
-            };
-
-            window.openMenu = function(t) { 
-                var m = document.getElementById('popMenu'), c = document.getElementById('menuButtons'); 
-                document.getElementById('menuTitle').innerText = t === 'new' ? 'فئات العملة الجديدة' : 'فئات العملة القديمة'; 
-                c.innerHTML = ""; 
-                var v = (t === 'new') ? [10, 25, 50, 100, 200, 500] : [500, 1000, 2000, 5000]; 
-                v.forEach(function(x) { 
-                    var btn = document.createElement('button'); 
-                    btn.innerText = x; 
-                    btn.onclick = function() { 
-                        document.getElementById(t==='new'?'inNew':'inOld').value = x; 
-                        doCalc(t); 
-                        m.style.display='none'; 
-                    }; 
-                    c.appendChild(btn); 
-                }); 
-                m.style.display = 'flex'; 
-            };
-        })();
+        window.onclick = function(e) { if (!e.target.matches('.menu-icon')) document.getElementById('dropdownMenu').style.display = 'none'; };
     </script>
 </body>
 </html>
