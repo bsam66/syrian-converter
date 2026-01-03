@@ -58,13 +58,13 @@
         <h2>المحول السوري الذكي</h2>
         <div id="container" style="display: flex; flex-direction: column;">
             <div id="newSection" class="box">
-                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="imgNew" onclick="openMenu('new')">
+                <img src="file:///android_asset/50.jpg" id="imgNew" onclick="openMenu('new')">
                 <small>الفئة الجديدة</small>
                 <input type="number" id="inNew" placeholder="0" oninput="doCalc('new')">
             </div>
             <center id="btnCenter"><button class="swap-btn" onclick="doSwap()">⇅</button></center>
             <div id="oldSection" class="box">
-                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="imgOld" onclick="openMenu('old')">
+                <img src="file:///android_asset/50.jpg" id="imgOld" onclick="openMenu('old')">
                 <small>الفئة القديمة</small>
                 <input type="number" id="inOld" placeholder="0" oninput="doCalc('old')">
             </div>
@@ -120,7 +120,7 @@
                 if (!nv) iN.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
                 else if (nV === 10) iN.src = getPath("k10.jpg");
                 else if (nV === 25) iN.src = getPath("h25.jpg");
-                else if (nV === 50) iN.src = getPath("50.a.jpg");
+                else if (nV === 50) iN.src = getPath("50.jpg"); // تم التعديل هنا
                 else if (nV === 100) iN.src = getPath("a100.jpg");
                 else if (nV === 200) iN.src = getPath("b200.jpg");
                 else if (nV === 500) iN.src = getPath("r.500.jpg");
