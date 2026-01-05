@@ -140,8 +140,15 @@
             ]
         };
 
-        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
-        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').style.display = 'none'; }
+        function openDrawer() { 
+            document.getElementById('drawer').classList.add('open'); 
+            document.getElementById('overlay').style.display = 'block'; 
+            history.pushState({view: 'drawer'}, ''); // إضافة حالة للرجوع
+        }
+        function closeDrawer() { 
+            document.getElementById('drawer').classList.remove('open'); 
+            document.getElementById('overlay').style.display = 'none'; 
+        }
 
         function swapMode() {
             let topVal = document.getElementById('input-top').value;
@@ -189,6 +196,7 @@
                 list.innerHTML += `<div class="gallery-item" onclick="selectItem(${item.val}, '${side}')"><img src="${item.img}"><p style="font-weight:bold; margin-top:10px;">فئة ${item.val}</p></div>`;
             });
             document.getElementById('gallery').style.display = 'block';
+            history.pushState({view: 'gallery'}, ''); // إضافة حالة للرجوع عند فتح المعرض
         }
 
         function selectItem(val, side) {
@@ -197,7 +205,16 @@
             closeGallery();
         }
 
-        function closeGallery() { document.getElementById('gallery').style.display = 'none'; }
+        function closeGallery() { 
+            document.getElementById('gallery').style.display = 'none'; 
+        }
+
+        // التعامل مع زر الرجوع في الهاتف
+        window.onpopstate = function(event) {
+            closeGallery();
+            closeDrawer();
+            closeModal();
+        };
 
         function openInfo(type) {
             const m = document.getElementById('mModal');
@@ -211,6 +228,7 @@
                 b.innerHTML = "شكراً لاستخدامك تطبيق المحول السوري الذكي!<br>بإمكانك مشاركة هذا التطبيق مع أصدقائك لتعم الفائدة.";
             }
             m.style.display = 'flex';
+            history.pushState({view: 'modal'}, ''); // إضافة حالة للرجوع
             closeDrawer();
         }
         function closeModal() { document.getElementById('mModal').style.display = 'none'; }
