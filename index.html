@@ -8,40 +8,27 @@
     <style>
         :root { --olive: #2d5a27; --bg: #f4f6f4; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
-
-        /* شاشة التحميل */
         #splash { position: fixed; inset: 0; background: var(--olive); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: white; transition: 0.5s; }
         .splash-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid white; }
-
-        /* النافذة المنبثقة */
         .custom-modal { display: none; position: fixed; inset: 0; z-index: 10005; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 90%; max-width: 350px; padding: 30px; border-radius: 25px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         .modal-btn { background: var(--olive); color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
-
-        /* القائمة الجانبية */
         .drawer { position: fixed; top: 0; right: 0; width: 280px; height: 100%; background: white; z-index: 10001; transform: translateX(100%); transition: 0.3s; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
         .drawer.open { transform: translateX(0); }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; }
         .drawer-header { background: var(--olive); color: white; padding: 25px 15px; text-align: center; }
         .drawer-item { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; cursor: pointer; color: #333; font-weight: bold; }
         .drawer-item i { margin-left: 15px; color: var(--olive); width: 20px; }
-
-        /* الواجهة الرئيسية */
         .app-bar { background: var(--olive); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .container { padding: 20px 15px; display: flex; flex-direction: column; align-items: center; }
         .card { background: white; width: 95%; max-width: 400px; padding: 20px; border-radius: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; }
-
-        /* مربعات الصور */
         .img-box { width: 280px; height: 130px; background: #fff; border-radius: 15px; margin: 10px auto; border: 1px solid #ddd; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-
-        input { width: 85%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 15px; font-size: 26px; text-align: center; font-weight: bold; color: var(--olive); outline: none; }
-        .swap-btn { background: var(--olive); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 22px; margin: 10px 0; cursor: pointer; transition: 0.3s; }
-
+        input { width: 85%; padding: 12px; margin: 5px 0; border: 2px solid #eee; border-radius: 15px; font-size: 26px; text-align: center; font-weight: bold; color: var(--olive); outline: none; }
+        .text-preview { font-size: 13px; color: #d35400; margin-bottom: 10px; min-height: 20px; font-weight: bold; padding: 0 10px; line-height: 1.4; }
+        .swap-btn { background: var(--olive); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 22px; margin: 5px 0; cursor: pointer; transition: 0.3s; }
         .footer { margin-top: 25px; text-align: center; color: #666; width: 80%; border-top: 1px solid #eee; padding-top: 15px; }
         .social-icons a { font-size: 32px; margin: 0 15px; text-decoration: none; }
-
-        /* المعرض */
         .gallery { display: none; position: fixed; inset: 0; background: white; z-index: 10002; padding: 20px; overflow-y: auto; }
         .gallery-item { margin-bottom: 20px; text-align: center; background: #f9f9f9; padding: 15px; border-radius: 15px; cursor: pointer; }
         .gallery-item img { width: 240px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -87,7 +74,8 @@
             <div class="img-box" onclick="openGallery('top')">
                 <img id="img-top" src="https://i.ibb.co/JRQMcSmJ/start.jpg">
             </div>
-            <input type="number" id="input-top" placeholder="0" oninput="convert('top')">
+            <input type="number" id="input-top" placeholder="0" oninput="handleInput('top')">
+            <div id="text-top" class="text-preview"></div>
 
             <div>
                 <button class="swap-btn" onclick="swapMode()"><i class="fas fa-sync-alt"></i></button>
@@ -97,7 +85,8 @@
             <div class="img-box" onclick="openGallery('bottom')">
                 <img id="img-bottom" src="https://i.ibb.co/JRQMcSmJ/start.jpg">
             </div>
-            <input type="number" id="input-bottom" placeholder="0" oninput="convert('bottom')">
+            <input type="number" id="input-bottom" placeholder="0" oninput="handleInput('bottom')">
+            <div id="text-bottom" class="text-preview"></div>
         </div>
 
         <div class="footer">
@@ -140,54 +129,106 @@
             ]
         };
 
-        function openDrawer() { 
-            document.getElementById('drawer').classList.add('open'); 
-            document.getElementById('overlay').style.display = 'block'; 
-            history.pushState({view: 'drawer'}, ''); // إضافة حالة للرجوع
+        function numberToArabic(n) {
+            if (n === 0) return "صفر ليرة";
+            n = Math.floor(Math.abs(n));
+            
+            const units = ["", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة", "عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر"];
+            const tens = ["", "", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"];
+            const hundreds = ["", "مئة", "مئتان", "ثلاثمئة", "أربعمئة", "خمسمئة", "ستمئة", "سبعمئة", "ثمانمئة", "تسعمئة"];
+
+            function convert_3_digits(num) {
+                let res = "";
+                let h = Math.floor(num / 100);
+                let t_u = num % 100;
+                let t = Math.floor(t_u / 10);
+                let u = t_u % 10;
+
+                if (h > 0) res += hundreds[h];
+                if (t_u > 0) {
+                    if (res !== "") res += " و ";
+                    if (t_u < 20) res += units[t_u];
+                    else {
+                        res += units[u] + (u !== 0 && t !== 0 ? " و " : "") + tens[t];
+                    }
+                }
+                return res;
+            }
+
+            let result = "";
+            let million = Math.floor((n % 1e9) / 1e6);
+            let thousand = Math.floor((n % 1e6) / 1000);
+            let remainder = n % 1000;
+
+            if (million > 0) {
+                if (million === 1) result += "مليون";
+                else if (million === 2) result += "مليونان";
+                else result += convert_3_digits(million) + (million <= 10 ? " ملايين" : " مليون");
+            }
+            if (thousand > 0) {
+                if (result !== "") result += " و ";
+                if (thousand === 1) result += "ألف";
+                else if (thousand === 2) result += "ألفان";
+                else result += convert_3_digits(thousand) + (thousand <= 10 ? " آلاف" : " ألف");
+            }
+            if (remainder > 0) {
+                if (result !== "") result += " و ";
+                result += convert_3_digits(remainder);
+            }
+
+            // تمت إزالة "فقط" و "لا غير" من هنا
+            return result + " ليرة سورية";
         }
-        function closeDrawer() { 
-            document.getElementById('drawer').classList.remove('open'); 
-            document.getElementById('overlay').style.display = 'none'; 
+
+        function handleInput(source) {
+            let topInput = document.getElementById('input-top');
+            let botInput = document.getElementById('input-bottom');
+            let txtTop = document.getElementById('text-top');
+            let txtBot = document.getElementById('text-bottom');
+            
+            let val = parseFloat(source === 'top' ? topInput.value : botInput.value);
+
+            if (isNaN(val)) {
+                if(source === 'top') botInput.value = ""; else topInput.value = "";
+                txtTop.innerText = ""; txtBot.innerText = "";
+                resetImages();
+                return;
+            }
+
+            if (mode === "oldToNew") {
+                if (source === 'top') botInput.value = (val / 100);
+                else topInput.value = (val * 100);
+            } else {
+                if (source === 'top') botInput.value = (val * 100);
+                else topInput.value = (val / 100);
+            }
+            
+            updateImages(parseFloat(topInput.value), parseFloat(botInput.value));
+            txtTop.innerText = numberToArabic(parseFloat(topInput.value));
+            txtBot.innerText = numberToArabic(parseFloat(botInput.value));
         }
 
         function swapMode() {
-            let topVal = document.getElementById('input-top').value;
-            let botVal = document.getElementById('input-bottom').value;
             mode = (mode === "oldToNew") ? "newToOld" : "oldToNew";
             document.getElementById('lbl-top').innerText = (mode === "oldToNew") ? "العملة القديمة" : "العملة الجديدة";
             document.getElementById('lbl-bottom').innerText = (mode === "oldToNew") ? "العملة الجديدة" : "العملة القديمة";
-            document.getElementById('input-top').value = botVal;
-            document.getElementById('input-bottom').value = topVal;
-            convert('top'); 
-        }
-
-        function convert(source) {
-            let top = document.getElementById('input-top');
-            let bot = document.getElementById('input-bottom');
-            if (source === 'top') {
-                let v = parseFloat(top.value);
-                if (isNaN(v)) { bot.value = ""; resetImages(); return; }
-                let res = (mode === "oldToNew") ? v / 100 : v * 100;
-                bot.value = res; updateImages(v, res);
-            } else {
-                let v = parseFloat(bot.value);
-                if (isNaN(v)) { top.value = ""; resetImages(); return; }
-                let res = (mode === "oldToNew") ? v * 100 : v / 100;
-                top.value = res; updateImages(res, v);
-            }
+            document.getElementById('input-top').value = "";
+            document.getElementById('input-bottom').value = "";
+            document.getElementById('text-top').innerText = "";
+            document.getElementById('text-bottom').innerText = "";
+            resetImages();
         }
 
         function updateImages(vT, vB) {
-            let lT = (mode === "oldToNew") ? data.old : data.new;
-            let lB = (mode === "oldToNew") ? data.new : data.old;
-            let mT = lT.find(c => c.val === vT);
-            let mB = lB.find(c => c.val === vB);
-            document.getElementById('img-top').src = mT ? mT.img : logo;
-            document.getElementById('img-bottom').src = mB ? mB.img : logo;
+            let listT = (mode === "oldToNew") ? data.old : data.new;
+            let listB = (mode === "oldToNew") ? data.new : data.old;
+            let imgT = listT.find(i => i.val === vT);
+            let imgB = listB.find(i => i.val === vB);
+            document.getElementById('img-top').src = imgT ? imgT.img : logo;
+            document.getElementById('img-bottom').src = imgB ? imgB.img : logo;
         }
 
         function resetImages() { document.getElementById('img-top').src = logo; document.getElementById('img-bottom').src = logo; }
-
         function openGallery(side) {
             const list = document.getElementById('gallery-list');
             let type = (side === 'top') ? (mode === "oldToNew" ? 'old' : 'new') : (mode === "oldToNew" ? 'new' : 'old');
@@ -196,39 +237,29 @@
                 list.innerHTML += `<div class="gallery-item" onclick="selectItem(${item.val}, '${side}')"><img src="${item.img}"><p style="font-weight:bold; margin-top:10px;">فئة ${item.val}</p></div>`;
             });
             document.getElementById('gallery').style.display = 'block';
-            history.pushState({view: 'gallery'}, ''); // إضافة حالة للرجوع عند فتح المعرض
+            history.pushState({view: 'gallery'}, '');
         }
-
         function selectItem(val, side) {
-            if (side === 'top') { document.getElementById('input-top').value = val; convert('top'); }
-            else { document.getElementById('input-bottom').value = val; convert('bottom'); }
+            if (side === 'top') document.getElementById('input-top').value = val;
+            else document.getElementById('input-bottom').value = val;
+            handleInput(side);
             closeGallery();
         }
-
-        function closeGallery() { 
-            document.getElementById('gallery').style.display = 'none'; 
-        }
-
-        // التعامل مع زر الرجوع في الهاتف
-        window.onpopstate = function(event) {
-            closeGallery();
-            closeDrawer();
-            closeModal();
-        };
-
+        function closeGallery() { document.getElementById('gallery').style.display = 'none'; }
+        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; history.pushState({view: 'drawer'}, ''); }
+        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').style.display = 'none'; }
+        window.onpopstate = function() { closeGallery(); closeDrawer(); closeModal(); };
         function openInfo(type) {
-            const m = document.getElementById('mModal');
-            const t = document.getElementById('mTitle');
-            const b = document.getElementById('mBody');
+            const m = document.getElementById('mModal'), t = document.getElementById('mTitle'), b = document.getElementById('mBody');
             if(type === 'about') {
                 t.innerText = "حول التطبيق";
-                b.innerHTML = "<b>المحول السوري الذكي 『F.J』</b><br>تطبيق متخصص لتحويل العملات السورية القديمة والجديدة بذكاء.<br>بإشراف وتطوير: <b>بسام زين العابدين</b>";
+                b.innerHTML = "<b>المحول السوري الذكي 『F.J』</b><br>بإشراف وتطوير: <b>بسام زين العابدين</b>";
             } else {
                 t.innerText = "مشاركة التطبيق";
-                b.innerHTML = "شكراً لاستخدامك تطبيق المحول السوري الذكي!<br>بإمكانك مشاركة هذا التطبيق مع أصدقائك لتعم الفائدة.";
+                b.innerHTML = "شكراً لاستخدامك التطبيق!";
             }
             m.style.display = 'flex';
-            history.pushState({view: 'modal'}, ''); // إضافة حالة للرجوع
+            history.pushState({view: 'modal'}, '');
             closeDrawer();
         }
         function closeModal() { document.getElementById('mModal').style.display = 'none'; }
