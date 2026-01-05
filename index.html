@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحول السوري الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --olive: #2d5a27; --bg: #f4f6f4; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
+
+        /* شاشة التحميل */
+        #splash { position: fixed; inset: 0; background: var(--olive); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: white; transition: 0.5s; }
+        .splash-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid white; }
+
+        /* النافذة المنبثقة */
+        .custom-modal { display: none; position: fixed; inset: 0; z-index: 10005; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 90%; max-width: 350px; padding: 30px; border-radius: 25px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .modal-btn { background: var(--olive); color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
+
+        /* القائمة الجانبية */
+        .drawer { position: fixed; top: 0; right: 0; width: 280px; height: 100%; background: white; z-index: 10001; transform: translateX(100%); transition: 0.3s; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+        .drawer.open { transform: translateX(0); }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; }
+        .drawer-header { background: var(--olive); color: white; padding: 25px 15px; text-align: center; }
+        .drawer-item { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; cursor: pointer; color: #333; font-weight: bold; }
+        .drawer-item i { margin-left: 15px; color: var(--olive); width: 20px; }
+
+        /* الواجهة الرئيسية */
+        .app-bar { background: var(--olive); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .container { padding: 20px 15px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: white; width: 95%; max-width: 400px; padding: 20px; border-radius: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; }
+
+        /* مربعات الصور */
+        .img-box { width: 280px; height: 130px; background: #fff; border-radius: 15px; margin: 10px auto; border: 1px solid #ddd; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+
+        input { width: 85%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 15px; font-size: 26px; text-align: center; font-weight: bold; color: var(--olive); outline: none; }
+        .swap-btn { background: var(--olive); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 22px; margin: 10px 0; cursor: pointer; transition: 0.3s; }
+
+        .footer { margin-top: 25px; text-align: center; color: #666; width: 80%; border-top: 1px solid #eee; padding-top: 15px; }
+        .social-icons a { font-size: 32px; margin: 0 15px; text-decoration: none; }
+
+        /* المعرض */
+        .gallery { display: none; position: fixed; inset: 0; background: white; z-index: 10002; padding: 20px; overflow-y: auto; }
+        .gallery-item { margin-bottom: 20px; text-align: center; background: #f9f9f9; padding: 15px; border-radius: 15px; cursor: pointer; }
+        .gallery-item img { width: 240px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <img src="https://i.ibb.co/JRQMcSmJ/start.jpg" class="splash-img">
+        <h2 style="margin-top:15px;">المحول السوري الذكي</h2>
+    </div>
+
+    <div id="mModal" class="custom-modal">
+        <div class="modal-content">
+            <h3 id="mTitle" style="color:var(--olive);">حول التطبيق</h3>
+            <p id="mBody" style="line-height:1.6; color:#555;"></p>
+            <button class="modal-btn" onclick="closeModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+    
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <img src="https://i.ibb.co/JRQMcSmJ/start.jpg" style="width:70px; border-radius:50%; border:2px solid white;">
+            <h3 style="margin-top:10px; font-size: 18px;">المحول السوري الذكي 『F.J』</h3>
+        </div>
+        <div class="drawer-item" onclick="window.location.href='https://wa.me/963998535610'"><i class="fab fa-whatsapp"></i> مراسلة المطور</div>
+        <div class="drawer-item" onclick="openInfo('share')"><i class="fas fa-share-alt"></i> مشاركة التطبيق</div>
+        <div class="drawer-item" onclick="openInfo('about')"><i class="fas fa-info-circle"></i> حول التطبيق</div>
+        <div class="drawer-item" onclick="closeDrawer()"><i class="fas fa-times"></i> إغلاق القائمة</div>
+    </div>
+
+    <div class="app-bar">
+        <i class="fas fa-bars" onclick="openDrawer()" style="cursor:pointer; font-size: 24px;"></i>
+        <b>المحول السوري الذكي</b>
+        <img src="https://i.ibb.co/JRQMcSmJ/start.jpg" style="width:35px; height:35px; border-radius:50%;">
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div id="lbl-top" style="font-weight:bold; color:var(--olive);">العملة القديمة</div>
+            <div class="img-box" onclick="openGallery('top')">
+                <img id="img-top" src="https://i.ibb.co/JRQMcSmJ/start.jpg">
+            </div>
+            <input type="number" id="input-top" placeholder="0" oninput="convert('top')">
+
+            <div>
+                <button class="swap-btn" onclick="swapMode()"><i class="fas fa-sync-alt"></i></button>
+            </div>
+
+            <div id="lbl-bottom" style="font-weight:bold; color:var(--olive);">العملة الجديدة</div>
+            <div class="img-box" onclick="openGallery('bottom')">
+                <img id="img-bottom" src="https://i.ibb.co/JRQMcSmJ/start.jpg">
+            </div>
+            <input type="number" id="input-bottom" placeholder="0" oninput="convert('bottom')">
+        </div>
+
+        <div class="footer">
+            <p>برمجة وتطوير : <b>Bassam Zain AL-Abidin</b></p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/share/1D65pofnx6/" style="color:#1877f2;"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/nb_x.6?igsh=NDNua2VzazhubDdi" style="color:#e4405f;"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="gallery" class="gallery">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--olive); padding-bottom:10px; margin-bottom:15px;">
+            <h3>اختر الفئة</h3>
+            <button onclick="closeGallery()" style="background:red; color:white; border:none; padding:10px 20px; border-radius:10px;">رجوع</button>
+        </div>
+        <div id="gallery-list"></div>
+    </div>
+
+    <script>
+        setTimeout(() => document.getElementById('splash').style.display='none', 2500);
+
+        const logo = "https://i.ibb.co/JRQMcSmJ/start.jpg";
+        let mode = "oldToNew"; 
+
+        const data = {
+            old: [
+                { val: 500, img: "https://i.ibb.co/Kc0CF2zQ/500-old.jpg" },
+                { val: 1000, img: "https://i.ibb.co/zW4Tyj5h/1000-old.jpg" },
+                { val: 2000, img: "https://i.ibb.co/0p8TMNss/2000-old.jpg" },
+                { val: 5000, img: "https://i.ibb.co/zhZr8MZK/5000-old.jpg" }
+            ],
+            new: [
+                { val: 10, img: "https://i.ibb.co/sdJCqfbb/10-new.jpg" },
+                { val: 25, img: "https://i.ibb.co/TBPjCTDV/25-new.jpg" },
+                { val: 50, img: "https://i.ibb.co/VWdH4xhQ/50-new.jpg" },
+                { val: 100, img: "https://i.ibb.co/G3Mr05yN/100-new.jpg" },
+                { val: 200, img: "https://i.ibb.co/1fC9W1h9/200-new.jpg" },
+                { val: 500, img: "https://i.ibb.co/TMKtf3Hg/500-new.jpg" }
+            ]
+        };
+
+        function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
+        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').style.display = 'none'; }
+
+        function swapMode() {
+            let topVal = document.getElementById('input-top').value;
+            let botVal = document.getElementById('input-bottom').value;
+            mode = (mode === "oldToNew") ? "newToOld" : "oldToNew";
+            document.getElementById('lbl-top').innerText = (mode === "oldToNew") ? "العملة القديمة" : "العملة الجديدة";
+            document.getElementById('lbl-bottom').innerText = (mode === "oldToNew") ? "العملة الجديدة" : "العملة القديمة";
+            document.getElementById('input-top').value = botVal;
+            document.getElementById('input-bottom').value = topVal;
+            convert('top'); 
+        }
+
+        function convert(source) {
+            let top = document.getElementById('input-top');
+            let bot = document.getElementById('input-bottom');
+            if (source === 'top') {
+                let v = parseFloat(top.value);
+                if (isNaN(v)) { bot.value = ""; resetImages(); return; }
+                let res = (mode === "oldToNew") ? v / 100 : v * 100;
+                bot.value = res; updateImages(v, res);
+            } else {
+                let v = parseFloat(bot.value);
+                if (isNaN(v)) { top.value = ""; resetImages(); return; }
+                let res = (mode === "oldToNew") ? v * 100 : v / 100;
+                top.value = res; updateImages(res, v);
+            }
+        }
+
+        function updateImages(vT, vB) {
+            let lT = (mode === "oldToNew") ? data.old : data.new;
+            let lB = (mode === "oldToNew") ? data.new : data.old;
+            let mT = lT.find(c => c.val === vT);
+            let mB = lB.find(c => c.val === vB);
+            document.getElementById('img-top').src = mT ? mT.img : logo;
+            document.getElementById('img-bottom').src = mB ? mB.img : logo;
+        }
+
+        function resetImages() { document.getElementById('img-top').src = logo; document.getElementById('img-bottom').src = logo; }
+
+        function openGallery(side) {
+            const list = document.getElementById('gallery-list');
+            let type = (side === 'top') ? (mode === "oldToNew" ? 'old' : 'new') : (mode === "oldToNew" ? 'new' : 'old');
+            list.innerHTML = "";
+            data[type].forEach(item => {
+                list.innerHTML += `<div class="gallery-item" onclick="selectItem(${item.val}, '${side}')"><img src="${item.img}"><p style="font-weight:bold; margin-top:10px;">فئة ${item.val}</p></div>`;
+            });
+            document.getElementById('gallery').style.display = 'block';
+        }
+
+        function selectItem(val, side) {
+            if (side === 'top') { document.getElementById('input-top').value = val; convert('top'); }
+            else { document.getElementById('input-bottom').value = val; convert('bottom'); }
+            closeGallery();
+        }
+
+        function closeGallery() { document.getElementById('gallery').style.display = 'none'; }
+
+        function openInfo(type) {
+            const m = document.getElementById('mModal');
+            const t = document.getElementById('mTitle');
+            const b = document.getElementById('mBody');
+            if(type === 'about') {
+                t.innerText = "حول التطبيق";
+                b.innerHTML = "<b>المحول السوري الذكي 『F.J』</b><br>تطبيق متخصص لتحويل العملات السورية القديمة والجديدة بذكاء.<br>بإشراف وتطوير: <b>بسام زين العابدين</b>";
+            } else {
+                t.innerText = "مشاركة التطبيق";
+                b.innerHTML = "شكراً لاستخدامك تطبيق المحول السوري الذكي!<br>بإمكانك مشاركة هذا التطبيق مع أصدقائك لتعم الفائدة.";
+            }
+            m.style.display = 'flex';
+            closeDrawer();
+        }
+        function closeModal() { document.getElementById('mModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
